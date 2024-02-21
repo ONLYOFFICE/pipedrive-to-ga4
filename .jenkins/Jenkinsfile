@@ -1,0 +1,76 @@
+println("Branch name: ${BRANCH_NAME}")
+
+switch(BRANCH_NAME) {
+  case "develop":
+    aws_region="us-east-1"
+    region="info"
+    break
+  case "test_master":
+    aws_region="us-east-1"
+    region="com"
+    break
+  default:
+    println("Branch: ${BRANCH_NAME} do not for deploy.")
+    break
+}
+
+pipeline {
+  agent { label 'ubuntu' }
+  triggers {
+    githubPush()
+  }
+  options {
+    disableConcurrentBuilds()
+    buildDiscarder (logRotator(numToKeepStr: '5', artifactNumToKeepStr: '5'))
+  }
+  stages {
+    stage('deploy') {
+      when { 
+        anyOf { branch 'develop'; 
+                branch 'test_master' }
+      }
+      environment {
+        region = "${region}"
+      }
+      steps {
+        withCredentials([string(credentialsId: 'pipedrive-to-ga4.teamlab.info_measurement_id', 
+                variable: 'measurement_id'),
+                string(credentialsId: 'pipedrive-to-ga4.teamlab.info_api_secret', 
+                variable: 'api_secret')]) {
+        sh '''
+
+          sed -i "s^var_measurement_id^$measurement_id^" .env.local
+          sed -i "s^var_api_secret^$api_secret^" .env.local
+
+          tar -czpf .jenkins/pipedrive-to-ga4 \
+            --exclude ".git" \
+            --exclude ".gitignore" \
+            --exclude ".jenkins" \
+            --exclude "README.md" .
+          
+          echo "Deploy from ${BRANCH_NAME} is starting."
+        '''
+        }
+
+        sshPublisher(publishers: [sshPublisherDesc(configName: "strapi_oforms@${region}", 
+          transfers: [sshTransfer(cleanRemote: false, 
+            excludes: '', 
+            execCommand: '''
+              sudo bash /home/ubuntu/deploy/.jenkins/pipedrive_build.sh |& tee -a > /home/ubuntu/deploy/pipedrive-to-ga4_deploy.log
+            ''', 
+            execTimeout: 600000, 
+            flatten: false, 
+            makeEmptyDirs: false, 
+            noDefaultExcludes: false, 
+            patternSeparator: '[, ]+', 
+            remoteDirectory: '', 
+            remoteDirectorySDF: false, 
+            removePrefix: '', 
+            sourceFiles: '.jenkins/pipedrive-to-ga4.tar.gz,.jenkins/pipedrive_build.sh')], 
+          usePromotionTimestamp: false, 
+          useWorkspaceInPromotion: false, 
+          verbose: false)])
+      }
+    }
+  }
+}
