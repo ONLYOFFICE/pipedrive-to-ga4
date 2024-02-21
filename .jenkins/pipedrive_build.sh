@@ -8,7 +8,7 @@ CURRENT_DATE=$(date "+%Y%m%d-%H%M%S")
 # Define variables
 DOCKER_CONTAINER_TAG="node:16-alpine"
 EXPOSE_PORT="30010"
-APP_NAME="pipedrive-to-ga4"
+APP_NAME="pipedrive"
 APP_DIR="/app/$APP_NAME"
 BUILD_DIR="/app/${APP_NAME}_BUILD"
 SOURCE_ARCHIVE_PATH="/home/ubuntu/deploy/.jenkins/$APP_NAME.tar.gz"
@@ -25,7 +25,7 @@ find "$BUILD_DIR" -type f -exec chmod 644 {} \;
 cd "$BUILD_DIR"
 
 # Build application
-docker run --rm -v "$BUILD_DIR":"$APP_DIR" -w "$APP_DIR" "$DOCKER_CONTAINER_TAG" sh -c "yarn && yarn build"
+docker run --rm -v "$BUILD_DIR":"$APP_DIR" -w "$APP_DIR" "$DOCKER_CONTAINER_TAG" sh -c "npm i"
 
 ### DEPLOY STAGE
 
@@ -58,9 +58,9 @@ if docker ps -a | grep -wq "$APP_NAME"; then
     else
         # Build and run a new container if the image tag does not match
         docker rm "$APP_NAME"
-        docker run -d --name "$APP_NAME" --publish "0.0.0.0:$EXPOSE_PORT:$EXPOSE_PORT" -v "$APP_DIR:$APP_DIR" -w "$APP_DIR" --restart always "$DOCKER_CONTAINER_TAG" yarn start
+        docker run -d --name "$APP_NAME" --publish "0.0.0.0:$EXPOSE_PORT:$EXPOSE_PORT" -v "$APP_DIR:$APP_DIR" -w "$APP_DIR" --restart always "$DOCKER_CONTAINER_TAG" node index.js
     fi
 else
         # Build and run a new container if it doesn't exist
-        docker run -d --name "$APP_NAME" --publish "0.0.0.0:$EXPOSE_PORT:$EXPOSE_PORT" -v "$APP_DIR:$APP_DIR" -w "$APP_DIR" --restart always "$DOCKER_CONTAINER_TAG" yarn start
+        docker run -d --name "$APP_NAME" --publish "0.0.0.0:$EXPOSE_PORT:$EXPOSE_PORT" -v "$APP_DIR:$APP_DIR" -w "$APP_DIR" --restart always "$DOCKER_CONTAINER_TAG" node index.js
 fi
