@@ -12,7 +12,7 @@ app.use(express.json());
 
 app.post('/webhook', async (req, res) => {
     const user_id = req.query.user_id;
-
+    console.log('new event from pipedrive', req.body);
     
     const eventData = {
         "client_id": `${user_id}`,
