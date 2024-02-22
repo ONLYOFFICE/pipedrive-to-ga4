@@ -42,7 +42,7 @@ pipeline {
           sed -i "s^var_measurement_id^$measurement_id^" .env.local
           sed -i "s^var_api_secret^$api_secret^" .env.local
 
-          tar -czpf .jenkins/pipedrive \
+          tar -czpf .jenkins/pipedrive.tar.gz \
             --exclude ".git" \
             --exclude ".gitignore" \
             --exclude ".jenkins" \
