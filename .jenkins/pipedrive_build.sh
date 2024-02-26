@@ -58,9 +58,9 @@ if docker ps -a | grep -wq "$APP_NAME"; then
     else
         # Build and run a new container if the image tag does not match
         docker rm "$APP_NAME"
-        docker run -d --name "$APP_NAME" --log-driver=awslogs --log-opt awslogs-region=us-east-1 --log-opt awslogs-group=/www/pipedrive --log-opt awslogs-stream=console --publish "0.0.0.0:$EXPOSE_PORT:$EXPOSE_PORT" -v "$APP_DIR:$APP_DIR" -w "$APP_DIR" --restart always "$DOCKER_CONTAINER_TAG" node index.js
+        docker run -d --name "$APP_NAME" --log-driver=awslogs --log-opt awslogs-region=us-east-1 --log-opt awslogs-group=/site/pipedrive --log-opt awslogs-stream=console --publish "0.0.0.0:$EXPOSE_PORT:$EXPOSE_PORT" -v "$APP_DIR:$APP_DIR" -w "$APP_DIR" --restart always "$DOCKER_CONTAINER_TAG" node index.js
     fi
 else
         # Build and run a new container if it doesn't exist
-        docker run -d --name "$APP_NAME" --log-driver=awslogs --log-opt awslogs-region=us-east-1 --log-opt awslogs-group=/www/pipedrive --log-opt awslogs-stream=console --publish "0.0.0.0:$EXPOSE_PORT:$EXPOSE_PORT" -v "$APP_DIR:$APP_DIR" -w "$APP_DIR" --restart always "$DOCKER_CONTAINER_TAG" node index.js
+        docker run -d --name "$APP_NAME" --log-driver=awslogs --log-opt awslogs-region=us-east-1 --log-opt awslogs-group=/site/pipedrive --log-opt awslogs-stream=console --publish "0.0.0.0:$EXPOSE_PORT:$EXPOSE_PORT" -v "$APP_DIR:$APP_DIR" -w "$APP_DIR" --restart always "$DOCKER_CONTAINER_TAG" node index.js
 fi
