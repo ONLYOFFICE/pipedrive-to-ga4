@@ -1,3 +1,4 @@
+
 require('dotenv').config({ path: '.env.local' });
 const express = require('express');
 const axios = require('axios');
@@ -11,7 +12,7 @@ app.use(express.json());
 
 
 app.post('/webhook', async (req, res) => {
-    const event = req.body.event
+    const event = req.body.event.replace('.', '_');
     const user_id = req.body.current['08f603bf9e0032d5a9f9e5cd39ca8c7a4374ac82'];
     console.log('new event from pipedrive', req.body);
     console.log('event_name_log',event);
