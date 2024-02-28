@@ -44,7 +44,7 @@ app.post('/deal', async (req, res) => {
 
 app.post('/person', async (req, res) => {
     const event = req.body.event.replace('.', '_');
-    const user_id = req.body.current['1ab2463925590daaee2b572b68036cdfd9fec5f7'];
+    const user_id = req.body.current['ebb6db2fbeeb598c1ba3e60ccd24801756d81633'];
     console.log('new event from pipedrive', req.body);
     console.log('event_name_log',event);
     console.log('user_id_log',user_id);
