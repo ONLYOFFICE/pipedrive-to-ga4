@@ -15,21 +15,24 @@ app.post('/deal', async (req, res) => {
     const event = req.body.event.replace('.', '_');
     const user_id = req.body.current['08f603bf9e0032d5a9f9e5cd39ca8c7a4374ac82'];
     console.log('new event from pipedrive', req.body);
-    console.log('event_name_log',event);
-    console.log('user_id_log',user_id);
+    console.log('event_name_log', event);
+    console.log('user_id_log', user_id);
     
+    if (!user_id) {
+        console.log('user_id is empty, null, or undefined. Skipping event sending.');
+        return res.status(400).send('No user_id provided');
+    }
+
     const eventData = {
         "client_id": `${user_id}`,
         "events": [
             {
                 "name": `${event}`,
-                "params": {
-                }
+                "params": {}
             }
         ]
     };
 
-    
     try {
         const url = `https://www.google-analytics.com/mp/collect?measurement_id=${measurementId}&api_secret=${apiSecret}`;
         const response = await axios.post(url, eventData);
@@ -48,6 +51,11 @@ app.post('/person', async (req, res) => {
     console.log('new event from pipedrive', req.body);
     console.log('event_name_log',event);
     console.log('user_id_log',user_id);
+    
+    if (!user_id) {
+        console.log('user_id is empty, null, or undefined. Skipping event sending.');
+        return res.status(400).send('No user_id provided');
+    }
     
     const eventData = {
         "client_id": `${user_id}`,
