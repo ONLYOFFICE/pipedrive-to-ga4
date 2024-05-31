@@ -12,6 +12,7 @@ app.use(express.json());
 
 
 app.post('/deal', async (req, res) => {
+    console.log(req);
     const event = req.body.event.replace('.', '_');
     const user_id = req.body.current['08f603bf9e0032d5a9f9e5cd39ca8c7a4374ac82'];
     console.log('new event from pipedrive', req.body);
