@@ -38,6 +38,7 @@ app.post('/deal', async (req, res) => {
         const response = await axios.post(url, eventData);
         console.log(eventData);
         console.log('success', response.data);
+        res.status(200);
         res.status(200).send('success to GA4');
     } catch (error) {
         console.error('error', error);
