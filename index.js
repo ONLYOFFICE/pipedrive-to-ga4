@@ -10,6 +10,9 @@ const apiSecret = process.env.api_secret;
 
 app.use(express.json());
 
+app.get('/deal', (req, res) => {
+    res.status(200).send('This is the /deal page for GET requests');
+});
 
 app.post('/deal', async (req, res) => {    
     const event = req.body.event.replace('.', '_');
