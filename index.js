@@ -20,7 +20,7 @@ app.post('/deal', async (req, res) => {
     
     if (!user_id) {
         console.log('user_id is empty, null, or undefined. Skipping event sending.');
-        return res.status(400).send('No user_id provided');
+        return res.status(200).send('No user_id provided');
     }
 
     const eventData = {
@@ -42,7 +42,7 @@ app.post('/deal', async (req, res) => {
         res.status(200).send('success to GA4');
     } catch (error) {
         console.error('error', error);
-        res.status(500).send('error');
+        res.status(200).send('error');
     }
 });
 
