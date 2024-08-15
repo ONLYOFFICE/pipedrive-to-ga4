@@ -16,6 +16,7 @@ app.get('/deal', (req, res) => {
 
 app.post('/deal', async (req, res) => {    
     const event = req.body.event.replace('.', '_');
+    const status = req.body.current.status;
     const user_id = req.body.current['08f603bf9e0032d5a9f9e5cd39ca8c7a4374ac82'];
     console.log('new event from pipedrive', req.body);
     console.log('event_name_log', event);
@@ -31,7 +32,9 @@ app.post('/deal', async (req, res) => {
         "events": [
             {
                 "name": `${event}`,
-                "params": {}
+                "params":{
+                "status":`${status}`
+                }
             }
         ]
     };
